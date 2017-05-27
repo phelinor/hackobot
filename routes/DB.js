@@ -1,5 +1,5 @@
 
-/*Connection info*/
+//Connection info
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
   host     : process.env.DB_HOST,
@@ -9,9 +9,9 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
-/*Check if user exists already on DB*/
-exports.usuario_registrado = function(codigoFB) {
-	connection.query('SELECT usuarioCodigo FROM user WHERE usuarioCodigo = ' + codigoFB + '', function(error,resp) {// Check user based on FB id
+//Check if user exists already on DB
+exports.usuario_registrado = function(usuarioCodigo) {
+	connection.query('SELECT idusuario FROM usuarios WHERE usuarioCodigo = ' + usuarioCodigo + '', function(error,resp) {// Check user based on FB id
   	if (error){
   		return {status : "error", error : error.message}  	}
   	else{
@@ -21,26 +21,30 @@ exports.usuario_registrado = function(codigoFB) {
   		else{
   			return {status : false};
   		}
-
   	}
 });
 }
 
+//Insert new Usuario
 exports.usuario_registrar = function(usuarioNombre,usuarioCodigo){
-connection.query('INSERT INTO usuarios(usuarioNombre,usuarioCodigo) VALUES(' + usuarioNombre + ',' + usuarioCodigo + ')',function(error){
+connection.query('INSERT INTO usuarios(usuarioNombre,usuarioCodigo) VALUES(' + usuarioNombre + ',' + usuarioCodigo + ')',function(error,resp){
 	if(error){
 		return {status: "error", error : error.message}
 	}
 	else{
-		return {status: "done"}
-	}
-
+  		if(resp !== null){
+  			return resp.insertId;
+  		}
+  		else{
+  			return {status : false};
+  		}
+  	}
 });
 }
 
-
+//Insert new consulta
 exports.consulta_almacenar = function(tienda,producto,precio,precioMasBajo,consulta) {//store a new item searched
-	connection.query('INSERT INTO consulta (tienda,producto,precio,precioMasBajo,consulta) VALUES (' + tienda + ',' + producto + ',' + precio + ',' + precioMasBajo + ',' + consulta + ')',function(error){
+	connection.query('INSERT INTO consultas (tienda,producto,precio,precioMasBajo,consulta) VALUES (' + tienda + ',' + producto + ',' + precio + ',' + precioMasBajo + ',' + consulta + ')',function(error){
 		if (error) {
 			return {status: "error", error : error.message}
 		}
@@ -50,9 +54,9 @@ exports.consulta_almacenar = function(tienda,producto,precio,precioMasBajo,consu
 	});
 }
 
-//Return items for an user
+//Return consultas from a user
 exports.consulta_obtener = function(idUsuario) {
-	connection.query('SELECT producto FROM consultas where idUsuario = ' + idUsuario + '',function(error,rows){
+	connection.query('SELECT producto FROM consultas where idusuario = ' + idUsuario + '',function(error,rows){
 		if (error) {
 			return {status: "error", error : error.message};
 		}
@@ -62,9 +66,9 @@ exports.consulta_obtener = function(idUsuario) {
 	});
 }
 
-//Modify
+//Update Product Price
 exports.consulta_actualizar = function(idConsulta,nuevoPrecio) {
-	connection.query("UPDATE consultas set precioActual = " + nuevoPrecio + " WHERE consulta = " + idConsulta + "",function(error){
+	connection.query("UPDATE consultas set precio = " + nuevoPrecio + " WHERE idconsulta = " + idConsulta + "",function(error){
 		if (error) {
 			return {status: "error", error : error.message}
 		}
