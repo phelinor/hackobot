@@ -1,44 +1,4 @@
 
-var express = require('express');
-var router = express.Router();
-
-/*Route for the module*/
-//Existe usuario
-router.get('/usuario', function (req, res) {
-  var codigoFB = req.params.codigoFB;
-
-  res.json(usuario_registrado(codigoFB));
-});
-
-//Ingresa Usuario
-router.post('/producto', function(req,res){
-  var codigoFB = req.body.codigoFB;
-  var nombre = req.body.nombre;
-  res.json(usuario_registrar(nombre,codigoFB));
-});
-
-//ingresa Consulta
-router.post('/consulta', function (req, res) {
-  var tienda = req.body.tienda;
-  var producto = req.body.producto;
-  var precio = req.body.precio;
-  var precioMasBajo = req.body.precioMasBajo;
-  var consulta = req.body.consulta;
-  res.json(consulta_almacenar(tienda,producto,precio,precioMasBajo,consulta));
-});
-
-//obtener consultas
-router.get('/consulta', function (req, res) {
-  var idUsuario = req.params.idUsuario;
-  res.json(consulta_obtener(idUsuario));
-});
-
-//modifica precio
-router.put('/consulta', function (req, res) {
-  var idConsulta = req.body.idConsulta;
-  var nuevoPrecio = req.body.nuevoPrecio;
-  res.json(consulta_actualizar(idConsulta,nuevoPrecio));
-});
 /*Connection info*/
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
@@ -50,7 +10,7 @@ var connection = mysql.createConnection({
 connection.connect();
 
 /*Check if user exists already on DB*/
-function usuario_registrado(codigoFB) {
+exports.usuario_registrado = function(codigoFB) {
 	connection.query('SELECT usuarioCodigo FROM user WHERE usuarioCodigo = ' + codigoFB + '', function(error,resp) {// Check user based on FB id
   	if (error){
   		return {status : "error", error : error.message}  	}
@@ -66,7 +26,7 @@ function usuario_registrado(codigoFB) {
 });
 }
 
-function usuario_registrar(usuarioNombre,usuarioCodigo){
+exports.usuario_registrar = function(usuarioNombre,usuarioCodigo){
 connection.query('INSERT INTO usuarios(usuarioNombre,usuarioCodigo) VALUES(' + usuarioNombre + ',' + usuarioCodigo + ')',function(error){
 	if(error){
 		return {status: "error", error : error.message}
@@ -79,7 +39,7 @@ connection.query('INSERT INTO usuarios(usuarioNombre,usuarioCodigo) VALUES(' + u
 }
 
 
-function consulta_almacenar(tienda,producto,precio,precioMasBajo,consulta) {//store a new item searched
+exports.consulta_almacenar = function(tienda,producto,precio,precioMasBajo,consulta) {//store a new item searched
 	connection.query('INSERT INTO consulta (tienda,producto,precio,precioMasBajo,consulta) VALUES (' + tienda + ',' + producto + ',' + precio + ',' + precioMasBajo + ',' + consulta + ')',function(error){
 		if (error) {
 			return {status: "error", error : error.message}
@@ -91,7 +51,7 @@ function consulta_almacenar(tienda,producto,precio,precioMasBajo,consulta) {//st
 }
 
 //Return items for an user
-function consulta_obtener(idUsuario) {
+exports.consulta_obtener = function(idUsuario) {
 	connection.query('SELECT producto FROM consultas where idUsuario = ' + idUsuario + '',function(error,rows){
 		if (error) {
 			return {status: "error", error : error.message};
@@ -103,7 +63,7 @@ function consulta_obtener(idUsuario) {
 }
 
 //Modify
-function consulta_actualizar(idConsulta,nuevoPrecio) {
+exports.consulta_actualizar = function(idConsulta,nuevoPrecio) {
 	connection.query("UPDATE consultas set precioActual = " + nuevoPrecio + " WHERE consulta = " + idConsulta + "",function(error){
 		if (error) {
 			return {status: "error", error : error.message}
