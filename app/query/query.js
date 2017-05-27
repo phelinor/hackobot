@@ -1,3 +1,5 @@
+var request = require('request');
+
 function QueryProduct(userId,product)
 {
     var result = [];
@@ -20,10 +22,14 @@ function AmazonSearch(product)
 
 function MercadoLibreSearch(product)
 {
-    var productName = product;
-    var price = "15.00";
-    var store = "Mercado Libre"
-    return {ProductName:productName,Price:price,Store:store}
+    return new Promise((resolve, reject) => {
+         request('https://api.mercadolibre.com/sites/MLM/search?q='+product+'&sort=price_desc&limit=1', function (error, response, body) {
+            if(error) reject({status:"Error",error:error});
+
+            let bodyJson = JSON.parse(body);
+            resolve( {ProductName:body.results[0].title,Price:body.results[0].price,Store:"Mercado libre"});
+        });
+    });
 }
 
 function WalMartSearch(product)
