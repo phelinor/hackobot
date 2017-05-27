@@ -1,25 +1,37 @@
-function QueryProduct(userId,Product)
+function QueryProduct(userId,product)
 {
-    AmazonSearch(Product);
-    MercadoLibreSearch(Product);
-    WalMartSearch(Product);
-    return 'hola uto' + userId + Product;
+    var result = [];
+    var amazon  = AmazonSearch(product);
+    var mercado = MercadoLibreSearch(product);
+    var walmart = WalMartSearch(product);
+    result.push(amazon);
+    result.push(mercado);
+    result.push(walmart);
+    return result;    
 }
 
-function AmazonSearch(Product)
+function AmazonSearch(product)
 {
-    var ProductName = '';
-    return {}
+    var productName = product;
+    var price = "20.00";
+    var store = "Amazon"
+    return {ProductName:productName,Price:price,Store:store}
 }
 
-function MercadoLibreSearch(Product)
+function MercadoLibreSearch(product)
 {
-
+    var productName = product;
+    var price = "15.00";
+    var store = "Mercado Libre"
+    return {ProductName:productName,Price:price,Store:store}
 }
 
-function WalMartSearch(Product)
+function WalMartSearch(product)
 {
-
+    var productName = product;
+    var price = "25.00";
+    var store = "Wal Mart"
+    return {ProductName:productName,Price:price,Store:store}
 }
 
 exports.QueryProduct = QueryProduct
