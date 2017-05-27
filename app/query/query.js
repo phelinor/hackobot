@@ -2,14 +2,7 @@ var request = require('request');
 
 function QueryProduct(userId,product)
 {
-    var result = [];
-    var amazon  = AmazonSearch(product);
-    var mercado = MercadoLibreSearch(product);
-    var walmart = WalMartSearch(product);
-    result.push(amazon);
-    result.push(mercado);
-    result.push(walmart);
-    return result;    
+   return Promise.all([MercadoLibreSearch(product), AmazonSearch(product), WalMartSearch(product)]);
 }
 
 function AmazonSearch(product)
@@ -26,8 +19,10 @@ function MercadoLibreSearch(product)
          request('https://api.mercadolibre.com/sites/MLM/search?q='+product+'&sort=price_desc&limit=1', function (error, response, body) {
             if(error) reject({status:"Error",error:error});
 
-            let bodyJson = JSON.parse(body);
-            resolve( {ProductName:body.results[0].title,Price:body.results[0].price,Store:"Mercado libre"});
+            body = JSON.parse(body);
+            if(body.results.length > 0)
+                resolve( {ProductName:body.results[0].title,Price:body.results[0].price,Store:"Mercado libre"});
+            else reject({status:"Error",error:"producto no encontrado"});
         });
     });
 }
