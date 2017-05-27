@@ -2,9 +2,9 @@
 /*Connection info*/
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
-  host     : 'us-cdbr-azure-southcentral-f.cloudapp.net',
-  user     : 'b1322d31d33360',
-  password : '4e2c2e2a'
+  host     : process.env.DB_HOST,
+  user     : process.env.DB_USER,
+  password : process.env.DB_PASS
 });
 
 connection.connect();
