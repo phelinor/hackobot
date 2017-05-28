@@ -25,7 +25,11 @@ router.get('/', function(req, res, next) {
             }
             return 0 
         });
-            
+        db.usuario_registrado(req.query.id).then(res => 
+            {db.consulta_almacenar(res.idusuario,values[0].product.Store,values[0].product.ProductName,values[0].product.Price,values[0].product.Price,product)
+            .catch(err => {console.log(err);})}
+        )    
+        .catch(err => {console.log(err);});    
         res.status(200).send(values);
         }).catch(err => { 
             console.log(err);

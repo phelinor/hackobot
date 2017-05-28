@@ -1,15 +1,11 @@
 'use strict';
 
-var request = require("request");
-
-let
-  sender = require('./sender');
-
-const
-  validateNewUser = (userSenderId) => {
-    return false;
-  },
-  createUser = () => {},
+const 
+  db = require('../routes/DB'),
+  request = require("request"),
+  sender = require('./sender'),
+  validateNewUser = (userSenderId) => db.usuario_registrado(userSenderId),
+  createUser = (name, userId) => db.usuario_registrar(name, userId),
   searchQuery = (query) => {
     return new Promise((resolve, reject) => {
       console.log(process.env.API_URL);
@@ -89,14 +85,33 @@ module.exports = {
       for (var e in req.body.entry[i].messaging) {
         let msg = req.body.entry[i].messaging[e];
         if (msg.message) {
-          msgGenerator(isPriceRequest(msg.message.text), msg.message.text)
-          .then((newMsg) => {
-            sender.sendMessage(newMsg , msg.sender.id)
-            .then((com) => {
-              console.log(com);
-              res.json(com);
-            }).catch((err) => {
-              console.log(err.message);
+          validateNewUser(msg.sender.id)
+          .then(l_user => {
+            msgGenerator(isPriceRequest(msg.message.text), msg.message.text)
+            .then((newMsg) => {
+              sender.sendMessage(newMsg , msg.sender.id)
+              .then((com) => {
+                console.log(com);
+                res.json(com);
+              }).catch((err) => {
+                console.log(err.message);
+                res.json(err);
+              });
+            });
+          }).catch(n_user => {
+            createUser('Amigo', msg.sender.id).then(s_user => {
+              msgGenerator(isPriceRequest(msg.message.text), msg.message.text)
+              .then((newMsg) => {
+                sender.sendMessage(newMsg , msg.sender.id)
+                .then((com) => {
+                  console.log(com);
+                  res.json(com);
+                }).catch((err) => {
+                  console.log(err.message);
+                  res.json(err);
+                });
+              });
+            }).catch(err =>{
               res.json(err);
             });
           });
