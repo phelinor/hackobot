@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const sender = require('./sender');
+const sender = require('../utils/sender');
 
 
 
