@@ -5,7 +5,7 @@ var query = require('../app/query/query');
 
 
 
-/* GET users listing. */
+/* GET Products List. */
 router.get('/', function(req, res, next) {
     var id = req.query.id;
     var product = req.query.product;
