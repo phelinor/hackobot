@@ -41,6 +41,7 @@ const
           resolve(finalMessage);
         })
         .catch((err) => {
+          console.log('ERROR chido: ' + err);
           return resolve(`Mil disculpas, pero no encontramos ese producto.`);
         });
       } else {
