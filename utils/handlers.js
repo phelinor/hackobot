@@ -25,7 +25,7 @@ const
           return reject(error);
         }
         console.log('RESULT: ' + body);
-        resolve(body);
+        resolve(JSON.parse(body));
       });
     });
   },
