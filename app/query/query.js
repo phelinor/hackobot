@@ -7,10 +7,11 @@ function QueryProduct(userId,product)
 
 function AmazonSearch(product)
 {
-    var productName = product;
-    var price = "20.00";
-    var store = "Amazon"
-    return {ProductName:productName,Price:price,Store:store}
+    var productName = "EVGA GeForce GTX 1080 Ti Founders Edition GeForce GTX 1080 TI 11GB GDDR5X - Tarjeta gráfica (NVIDIA, GeForce GTX 1080 TI, 7680 x 4320 Pixeles, 1480 MHz, 1582 MHz, 11 GB)";
+    var price = 15216.96;
+    var store = "Amazon";
+    var url = "https://www.amazon.com.mx/EVGA-GeForce-1080-Founders-GDDR5X/dp/B06XH2P8DD/ref=sr_1_1?ie=UTF8&qid=1495934665&sr=8-1&keywords=evga+1080+ti";
+    return {status:"ok",product:{ProductName:productName,Price:price,Store:store,Url:url}}
 }
 
 function MercadoLibreSearch(product)
@@ -20,7 +21,7 @@ function MercadoLibreSearch(product)
             if(error) reject({status:"Error",error:error});
             body = JSON.parse(body);
             if(body.results.length > 0)
-                resolve({status:"ok",product:{ProductName:body.results[0].title,Price:body.results[0].price,Store:"Mercado libre"}});
+                resolve({status:"ok",product:{ProductName:body.results[0].title,Price:body.results[0].price,Store:"Mercado libre",Url:body.results[0].permalink}});
             else reject({status:"Error",error:"producto no encontrado"});
         });
     });
@@ -34,7 +35,7 @@ function WalMartSearch(product)
             if(error) reject({status:"Error",error:error});
             body = JSON.parse(body);
             if(body.items.length > 0)
-                resolve( {status:"ok",product:{ProductName:body.items[0].name,Price:body.items[0].salePrice * 18.51,Store:"Walt Mart"}});
+                resolve( {status:"ok",product:{ProductName:body.items[0].name,Price:(body.items[0].salePrice * 18.51).toFixed(2),Store:"Walt Mart",Url:body.items[0].productUrl}});
             else reject({status:"Error",error:"producto no encontrado"});
         });
     });
