@@ -1,35 +1,45 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const db = require('./DB');
 
-var query = require('../app/query/query');
+const query = require('../app/query/query');
 
 
 
 /* GET Products List. */
-router.get('/', function(req, res, next) {
-    var id = req.query.id;
-    var product = req.query.product;
-    query.QueryProduct(id,product)
-    .then(values => {         
-       values = values.filter(item => {
-            return item.status == "ok"
-        });
+router.get('/', function(req, res, next) {    
+    let product = req.query.product;
 
-        values = values.sort( (a, b) => {
-            if (a.price > b.price) {
-                return 1;
-            }
-            if (a.price < b.price) {
-                return -1;
-            }
-            return 0 
-        });
-        
-       res.status(200).send(values);
-    }).catch(err => { 
-        console.log(err);
-       res.status(500).send("Algo Paso ven mas tarde");  
-    });     
+    db.usuario_registrado('luisgerardo.gonzalezparra').then(res => {        
+        query.QueryProduct(res.idusuario,product)
+        .then(values => {         
+            values = values.filter(item => {
+                return item.status == "ok"
+            });
+
+            values = values.sort( (a, b) => {
+                if (a.price > b.price) {
+                    return 1;
+                }
+                if (a.price < b.price) {
+                    return -1;
+                }
+                return 0 
+            });
+            
+        res.status(200).send(values);
+        }).catch(err => { 
+            console.log(err);
+        res.status(500).send("Algo Paso ven mas tarde");  
+        });     
+    })
+    .catch( err => {
+       console.log(err);
+       if(err.status == false) res.status(404).send("No encontre al wey que buscas");
+       else{
+            res.status(500).send("valio madre");
+       }
+    });
 });
 
 module.exports = router;
