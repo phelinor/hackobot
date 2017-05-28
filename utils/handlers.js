@@ -21,10 +21,10 @@ const
 
       request(options, (error, response, body) => {
         if (error) {
-          console.log(error);
+          console.log('ERROR: ' + error);
           return reject(error);
         }
-        console.log(body);
+        console.log('RESULT: ' + body);
         resolve(body);
       });
     });
