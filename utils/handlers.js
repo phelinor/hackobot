@@ -34,11 +34,10 @@ const
       if (isPrice){
         searchQuery(msg.split('precio de ')[1])
         .then((res) => {
-          let finalMessage = 'Encontramos estos productos: \n';
-          for(var i in res) {
-            finalMessage = finalMessage.concat(`- ${res[i].product.ProductName}. $ ${res[i].product.Price} at ${res[i].product.Store}.\n`);
-          }
-          resolve(finalMessage);
+          let finalMessage = res.map((i) => {
+            return `- ${i.product.ProductName}. $ ${i.product.Price} at ${i.product.Store}.`;
+          });
+          resolve(finalMessage.join('\n'));
         })
         .catch((err) => {
           console.log('ERROR chido: ' + err);
