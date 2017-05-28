@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const db = require('./DB');
-
 const query = require('../app/query/query');
+
 
 
 
 /* GET Products List. */
 router.get('/', function(req, res, next) {    
     let product = req.query.product;
-
     db.usuario_registrado(req.query.id).then(resDB => {        
         query.QueryProduct(resDB.idusuario,product)
         .then(values => {         
@@ -17,15 +16,15 @@ router.get('/', function(req, res, next) {
                 return item.status == "ok"
             });
 
-            values = values.sort( (a, b) => {
-                if (a.price > b.price) {
-                    return 1;
-                }
-                if (a.price < b.price) {
-                    return -1;
-                }
-                return 0 
-            });
+        values = values.sort( (a, b) => {
+            if (a.product.Price > b.product.Price) {
+                return 1;
+            }
+            if (a.product.Price < b.product.Price) {
+                return -1;
+            }
+            return 0 
+        });
             
         res.status(200).send(values);
         }).catch(err => { 
