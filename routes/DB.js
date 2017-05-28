@@ -11,70 +11,80 @@ connection.connect();
 
 //Check if user exists already on DB
 exports.usuario_registrado = function(usuarioCodigo) {
-	connection.query('SELECT idusuario FROM usuarios WHERE usuarioCodigo = ' + usuarioCodigo + '', function(error,resp) {// Check user based on FB id
-  	if (error){
-  		return {status : "error", error : error.message}  	}
-  	else{
-  		if(resp !== null){
-  			return {status : true};
-  		}
+	return new Promise((resolve,reject) => {
+		connection.query('SELECT idusuario FROM usuarios WHERE usuarioCodigo = ' + usuarioCodigo + '', function(error,resp) {// Check user based on FB id
+  		if (error){
+  			reject({status : "error", error : error.message})  	}
   		else{
-  			return resp;
+  			if(resp !== null){
+  				resolve({status : true});
+  			}
+  			else{
+  				reject(resp);
+  			}
   		}
-  	}
-});
+		});
+	});
 }
 
 //Insert new Usuario
 exports.usuario_registrar = function(usuarioNombre,usuarioCodigo){
+return new Promise((resolve,reject) => {
 connection.query('INSERT INTO usuarios(usuarioNombre,usuarioCodigo) VALUES("' + usuarioNombre + '","' + usuarioCodigo + '")',function(error,resp){
 	if(error){
-		return {status: "error", error : error.message}
+		reject({status: "error", error : error.message});
 	}
 	else{
   		if(resp !== null){
-  			return resp.insertId;
+  			resolve(resp.insertId);
   		}
   		else{
-  			return {status : false};
+  			resolve({status : false});
   		}
   	}
+});
 });
 }
 
 //Insert new consulta
 exports.consulta_almacenar = function(idUsuario,tienda,producto,precio,precioMasBajo,consulta) {//store a new item searched
+	return new Promise((resolve,reject) => {
 	connection.query('INSERT INTO consultas (idusuario,tienda,producto,precio,precioMasBajo,consulta) VALUES (' + idUsuario + ',"' + tienda + '","' + producto + '",' + precio + ',' + precioMasBajo + ',"' + consulta + '")',function(error){
 		if (error) {
-			return {status: "error", error : error.message}
+			reject({status: "error", error : error.message});
 		}
 		else{
-			return {status: "done"}
+			resolve({status: "done"});
 		}
+	});
 	});
 }
 
 //Return consultas from a user
 exports.consulta_obtener = function(idUsuario) {
+	return new Promise((resolve,reject) => {
 	connection.query('SELECT producto FROM consultas where idusuario = ' + idUsuario + '',function(error,rows){
 		if (error) {
-			return {status: "error", error : error.message};
+			reject({status: "error", error : error.message});
 		}
 		else{
-			return rows;
+			resolve(rows);
 		}
+	});
 	});
 }
 
 //Update Product Price
 exports.consulta_actualizar = function(idConsulta,nuevoPrecio) {
+	return new Promise((resolve,reject) => {
 	connection.query("UPDATE consultas set precio = " + nuevoPrecio + " WHERE idconsulta = " + idConsulta + "",function(error){
 		if (error) {
-			return {status: "error", error : error.message}
+			reject({status: "error", error : error.message});
 		}
 		else{
-			return {status: "done"}
+			resolve({status: "done"});
 		}
+	});
 	});
 }
 
