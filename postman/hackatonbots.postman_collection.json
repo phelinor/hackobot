@@ -1,0 +1,34 @@
+{
+	"id": "74eaa53e-5214-ba5b-7849-e7df0b4ddde1",
+	"name": "hackatonbots",
+	"description": "",
+	"order": [
+		"2b247e1a-abff-c501-2ff3-0dc91adca61a"
+	],
+	"folders": [],
+	"timestamp": 1495935006970,
+	"owner": "535819",
+	"public": false,
+	"requests": [
+		{
+			"id": "2b247e1a-abff-c501-2ff3-0dc91adca61a",
+			"headers": "",
+			"url": "https://tacobotapi.herokuapp.com/query?id=123&product=Nvidia%20GTX%201080%20TI",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "74eaa53e-5214-ba5b-7849-e7df0b4ddde1",
+			"data": null,
+			"dataMode": "params",
+			"name": "hackathonbots-search-product-in-stores",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1495935006970,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		}
+	]
+}
