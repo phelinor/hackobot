@@ -10,8 +10,8 @@ const query = require('../app/query/query');
 router.get('/', function(req, res, next) {    
     let product = req.query.product;
 
-    db.usuario_registrado('luisgerardo.gonzalezparra').then(res => {        
-        query.QueryProduct(res.idusuario,product)
+    db.usuario_registrado(req.query.id).then(resDB => {        
+        query.QueryProduct(resDB.idusuario,product)
         .then(values => {         
             values = values.filter(item => {
                 return item.status == "ok"
@@ -30,7 +30,7 @@ router.get('/', function(req, res, next) {
         res.status(200).send(values);
         }).catch(err => { 
             console.log(err);
-        res.status(500).send("Algo Paso ven mas tarde");  
+            res.status(500).send("Algo Paso ven mas tarde");  
         });     
     })
     .catch( err => {
