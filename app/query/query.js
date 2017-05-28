@@ -34,8 +34,8 @@ function WalMartSearch(product)
          request('http://api.walmartlabs.com/v1/search?query=' + product + '&format=json&apiKey=' + token + '&sort=price&order=desc', function (error, response, body) {
             if(error) reject({status:"Error",error:error});
             body = JSON.parse(body);
-            if(body.items.length > 0)
-                resolve( {status:"ok",product:{ProductName:body.items[0].name,Price:(body.items[0].salePrice * 18.51).toFixed(2),Store:"Walt Mart",Url:body.items[0].productUrl}});
+            if(body.items && body.items.length > 0)
+                resolve( {status:"ok",product:{ProductName:body.items[0].name,Price:body.items[0].salePrice * 18.51,Store:"Walt Mart"}});
             else reject({status:"Error",error:"producto no encontrado"});
         });
     });
