@@ -13,6 +13,7 @@ const
   createUser = () => {},
   searchQuery = (query) => {
     return new Promise((resolve, reject) => {
+      console.log(process.env.API_URL);
       var options = { method: 'GET',
         url: process.env.API_URL,
         qs: { product: query }
@@ -20,8 +21,10 @@ const
 
       request(options, (error, response, body) => {
         if (error) {
+          console.log(error);
           return reject(error);
         }
+        console.log(body);
         resolve(body);
       });
     });
