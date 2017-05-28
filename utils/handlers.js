@@ -6,7 +6,6 @@ let
   sender = require('./sender');
 
 const
-  isPriceRequest = (msg) => /precio/gi.test(msg),
   validateNewUser = (userSenderId) => {
     return false;
   },
@@ -32,10 +31,30 @@ const
       });
     });
   },
+  isPriceRequest = (msg) => {
+    return /precio/gi.test(msg)||/presio/gi.test(msg)||/cuesta/gi.test(msg)||/sale/gi.test(msg);
+  }
+  queryGenerator = (msg) => {
+    if(length(msg.split(' precio de '))>1){
+      return msg.split(' precio de ')[1];
+    }
+    else if(length(msg.split(' presio de '))>1){
+      return msg.split(' presio de ')[1];
+    }
+    else if(length(msg.split(' cuesta '))>1){
+      return msg.split(' cuesta ')[1];
+    }
+    else if(length(msg.split(' sale '))>1){
+      return msg.split(' sale ')[1];
+    }
+    else{
+      return "error";
+    }
+  },
   msgGenerator = (isPrice, msg) => {
     return new Promise((resolve, reject) => {
       if (isPrice){
-        searchQuery(msg.split('precio de ')[1])
+        searchQuery(queryGenerator(msg))
         .then((res) => {
           let finalMessage = res.map((i) => {
             return `- ${i.product.ProductName}. $ ${i.product.Price} at ${i.product.Store}.`;
