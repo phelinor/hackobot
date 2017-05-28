@@ -1,6 +1,6 @@
 var request = require('request');
 
-function QueryProduct(userId,product)
+function QueryProduct(user_id,product)
 {
    return Promise.all([MercadoLibreSearch(product), AmazonSearch(product), WalMartSearch(product)]);
 }
@@ -35,7 +35,7 @@ function WalMartSearch(product)
             if(error) reject({status:"Error",error:error});
             body = JSON.parse(body);
             if(body.items && body.items.length > 0)
-                resolve( {status:"ok",product:{ProductName:body.items[0].name,Price:body.items[0].salePrice * 18.51,Store:"Walt Mart"}});
+                resolve( {status:"ok",product:{ProductName:body.items[0].name,Price:Number((body.items[0].salePrice * 18.51).toFixed(2)),Store:"Walt Mart",Url:body.items[0].productUrl}});
             else reject({status:"Error",error:"producto no encontrado"});
         });
     });
