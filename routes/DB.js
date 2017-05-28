@@ -19,7 +19,7 @@ exports.usuario_registrado = function(usuarioCodigo) {
   			return {status : true};
   		}
   		else{
-  			return {status : false};
+  			return resp;
   		}
   	}
 });
@@ -27,7 +27,7 @@ exports.usuario_registrado = function(usuarioCodigo) {
 
 //Insert new Usuario
 exports.usuario_registrar = function(usuarioNombre,usuarioCodigo){
-connection.query('INSERT INTO usuarios(usuarioNombre,usuarioCodigo) VALUES(' + usuarioNombre + ',' + usuarioCodigo + ')',function(error,resp){
+connection.query('INSERT INTO usuarios(usuarioNombre,usuarioCodigo) VALUES("' + usuarioNombre + '","' + usuarioCodigo + '")',function(error,resp){
 	if(error){
 		return {status: "error", error : error.message}
 	}
@@ -43,8 +43,8 @@ connection.query('INSERT INTO usuarios(usuarioNombre,usuarioCodigo) VALUES(' + u
 }
 
 //Insert new consulta
-exports.consulta_almacenar = function(tienda,producto,precio,precioMasBajo,consulta) {//store a new item searched
-	connection.query('INSERT INTO consultas (tienda,producto,precio,precioMasBajo,consulta) VALUES (' + tienda + ',' + producto + ',' + precio + ',' + precioMasBajo + ',' + consulta + ')',function(error){
+exports.consulta_almacenar = function(idUsuario,tienda,producto,precio,precioMasBajo,consulta) {//store a new item searched
+	connection.query('INSERT INTO consultas (idusuario,tienda,producto,precio,precioMasBajo,consulta) VALUES (' + idUsuario + ',"' + tienda + '","' + producto + '",' + precio + ',' + precioMasBajo + ',"' + consulta + '")',function(error){
 		if (error) {
 			return {status: "error", error : error.message}
 		}
