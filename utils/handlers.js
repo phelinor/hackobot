@@ -24,6 +24,9 @@ const
           console.log('ERROR: ' + error);
           return reject(error);
         }
+        if (response.statusCode > 200) {
+          return reject('Error status: ' + response.statusCode);
+        }
         console.log('RESULT: ' + body);
         resolve(JSON.parse(body));
       });
