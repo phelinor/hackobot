@@ -32,9 +32,12 @@ module.exports = {
         },
         json: true
       }).then((res) => {
-        if (res.error) { reject(res.error); }
+        if (res.error) { console.log(err); reject(res.error); }
         resolve(res);
-      });
+      }).catch(err => {
+        console.log(err);
+        reject({status:"error",err:"facebook murio =("});
+      })
     });
   }
 };
