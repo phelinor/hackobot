@@ -17,10 +17,10 @@ exports.usuario_registrado = function(usuarioCodigo) {
   			reject({status : "error", error : error.message})  	}
   		else{
   			if(resp !== null){
-  				resolve({status : true});
+  				resolve(resp);
   			}
   			else{
-  				reject(resp);
+  				reject({status : false, error : resp});
   			}
   		}
 		});
