@@ -1,6 +1,6 @@
 var request = require('request');
 
-function QueryProduct(user_id,product)
+function QueryProduct(userId,product)
 {
    return Promise.all([MercadoLibreSearch(product), AmazonSearch(product), WalMartSearch(product)]);
 }
